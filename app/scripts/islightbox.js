@@ -56,18 +56,18 @@
                 $isLightBox.setStyles(options);
 
                 var $islb = $('<div>', {'class': 'islb'}),
+                    $islbClose = $('<div>', {'class': 'islb-close'}),
+                    $islbNext = $('<div>', {'class': 'islb-next'}),
+                    $islbPrev = $('<div>', {'class': 'islb-prev'}),
                     $islbContainer = $('<div>', {'class': 'islb-container'}),
                     $islbMediaContainer = $('<div>', {'class': 'islb-media-container'}),
-                    $islbMedia = $('<div>', {'class': 'islb-media'}),
-                    $islbMediaElement = $('<div>', {'class': 'islb-media-element'});
+                    $islbMedia = $('<div>', {'class': 'islb-media'});
 
-                $islb.html(
+                $islb.html([$islbClose, $islbNext, $islbPrev]).append(
                     $islbContainer.html(
                         $islbMediaContainer.html(
                             $islbMedia.html(
-                                $islbMediaElement.html(
-                                    this.getElement.init(elementPath)
-                                )
+                                this.getElement.init(elementPath)
                             )
                         )
                     )
@@ -81,7 +81,7 @@
 
                 if (options.overlayClose) {
                     $islb.on('click', function(e) {
-                        if($(e.target).closest('.islb-media-element').length == 0) {
+                        if(($(e.target).closest('.islb-media').length == 0 || $(e.target).hasClass('islb-media')) && (!$(e.target).hasClass('islb-next') && !$(e.target).hasClass('islb-prev'))) {
                             $isLightBox.destroyIsLightBox(options);
                         }
                     });

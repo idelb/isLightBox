@@ -20,6 +20,8 @@
         text-align: center;
         height: 100%;
         max-height: 100%;
+        width: 100%;
+        max-width: 100%;
         .islb-media-container {
             max-width: 80%;
             max-height: 100%;
@@ -32,14 +34,13 @@
                 vertical-align: middle;
                 text-align: center;
                 height: 100%;
-                .islb-media-element {
+                img,
+                iframe {
                     display: inline-block;
                     vertical-align: middle;
-                    img,
-                    iframe {
-                        max-width: 100%;
-                        max-height: 100%;
-                    }
+                    max-width: 100%;
+                    max-height: 99%;
+                    box-shadow: 0 0 50px -8px rgba(0, 0, 0, 0.9);
                 }
                 &:before {
                     content: '';
@@ -50,6 +51,89 @@
                     height: 100%;
                 }
             }
+        }
+    }
+    .islb-close {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border: 2px solid #fff;
+        border-radius: 30px;
+        top: 20px;
+        right: 20px;
+        opacity: .3;
+        transform: rotate(45deg);
+        &:hover {
+            opacity: .5;
+            cursor: pointer;
+        }
+        &:after,
+        &:before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            right: 50%;
+            margin-right: -1px;
+            top: 50%;
+            margin-top: -10px;
+            background-color: #fff;
+        }
+        &:before {
+            width: 20px;
+            height: 2px;
+            margin-right: -10px;
+            margin-top: -1px;
+        }
+    }
+    .islb-next,
+    .islb-prev {
+        display: none;
+        opacity: .3;
+        position: absolute;
+        width: 30px;
+        height: 29px;
+        top: 50%;
+        margin-top: -15px;
+        left: 40px;
+        &:after,
+        &:before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 7px;
+            width: 2px;
+            height: 20px;
+            background-color: #fff;
+            transform: rotate(-45deg);
+        }
+        &:before {
+            top: -2px;
+            transform: rotate(45deg);
+        }
+        &:hover {
+            opacity: .5;
+            cursor: pointer;
+        }
+    }
+    .islb-next {
+        right: 40px;
+        left: auto;
+        &:after {
+            right: 7px;
+            left: auto;
+            transform: rotate(45deg);
+        }
+        &:before {
+            right: 7px;
+            left: auto;
+            transform: rotate(-45deg);
+        }
+    }
+    &.islb-gallery {
+        .islb-next,
+        .islb-prev {
+            display: block;
         }
     }
 }
