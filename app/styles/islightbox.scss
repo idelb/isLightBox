@@ -95,24 +95,27 @@
         opacity: .3;
         transition: opacity .2s ease-in-out;
         position: absolute;
-        width: 30px;
-        height: 29px;
+        width: 60px;
+        height: 60px;
         top: 50%;
-        margin-top: -15px;
-        left: 40px;
+        margin-top: -30px;
+        left: 20px;
+        background: rgba(0,0,0,.5);
+        border-radius: 50%;
+        z-index: 999;
         &:after,
         &:before {
             content: '';
             position: absolute;
-            bottom: -2px;
-            left: 7px;
+            bottom: 13px;
+            left: 27px;
             width: 2px;
             height: 20px;
             background-color: #fff;
             transform: rotate(-45deg);
         }
         &:before {
-            top: -2px;
+            top: 13px;
             transform: rotate(45deg);
         }
         &:hover {
@@ -120,17 +123,24 @@
             transition: opacity .2s ease-in-out;
             cursor: pointer;
         }
+        &.islb-disabled {
+            opacity: .1;
+            &:hover {
+                opacity: .1;
+                cursor: auto;
+            }
+        }
     }
     .islb-next {
-        right: 40px;
+        right: 20px;
         left: auto;
         &:after {
-            right: 7px;
+            right: 27px;
             left: auto;
             transform: rotate(45deg);
         }
         &:before {
-            right: 7px;
+            right: 27px;
             left: auto;
             transform: rotate(-45deg);
         }
