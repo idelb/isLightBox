@@ -2,10 +2,11 @@
     $.fn.isLightBox = function(config) {
         var defaults = {
             revealSpeed: 400,
+            changeSpeed: 800,
             background: 'rgba(0,0,0,.8)',
             overlayClose: true,
             escKey: true,
-            infinite: false,
+            infinite: true,
             /*
             navKey: true,
             callbackError: function() {},
@@ -17,7 +18,16 @@
         var options = $.extend({}, defaults, config);
 
         $(this).each(function() {
-            $.isLightBox.init($(this), options);
+            var newOptions = options;
+            var galleryName = $(this).data('islightbox');
+            if (galleryName !== '' && $('[data-islightbox-gallery="' + galleryName + '"]').length > 0) {
+                var $configElement = $('[data-islightbox-gallery="' + galleryName + '"]');
+                newOptions = $.extend({}, defaults, $configElement.data('islightbox-config'));
+            } else if ($(this).data('islightbox-config') !== undefined) {
+                newOptions = $.extend({}, defaults, $(this).data('islightbox-config'));
+            }
+
+            $.isLightBox.init($(this), newOptions);
         });
     };
 
@@ -34,7 +44,7 @@
 
                     var elementPath = $(this).attr('href');
 
-                    $isLightBox.createIsLightBox(elementPath, options, $obj);
+                    $isLightBox.createIsLightBox(options, $obj);
                 });
             },
             events: {
@@ -99,9 +109,11 @@
                     $('.islb-prev').removeClass('islb-disabled');
                 }
             },
-            createIsLightBox: function(elementPath, options, $obj) {
+            createIsLightBox: function(options, $obj) {
                 var $isLightBox = this,
-                    gallery = $obj.data('islightbox');
+                    gallery = $obj.data('islightbox'),
+                    elementPath = $obj.attr('href'),
+                    elementTitle = $obj.attr('title');
 
                 var $islb = $('<div>', {'class': 'islb'}),
                     $islbClose = $('<div>', {'class': 'islb-close'}),
@@ -118,7 +130,8 @@
 
                         $('[data-islightbox="' + gallery + '"]').each(function(index) {
                             $isLightBox.gallery[gallery][index] = {
-                                path: $(this).attr('href')
+                                path: $(this).attr('href'),
+                                title: $(this).attr('title'),
                             };
 
                             $(this).attr('data-islightbox-counter', index);
@@ -133,7 +146,9 @@
                                 currentItem = -1;
                             }
 
-                            $isLightBox.gotoToElement($isLightBox.gallery[gallery][currentItem+1].path);
+                            var currentSlide = $isLightBox.gallery[gallery][currentItem+1];
+
+                            $isLightBox.gotoToElement(currentSlide.path, currentSlide.title, options);
                             currentItem++;
                             $isLightBox.refreshArrows(currentItem, gallery, options);
                         }
@@ -145,16 +160,20 @@
                                 currentItem = $isLightBox.gallery[gallery].length;
                             }
 
-                            $isLightBox.gotoToElement($isLightBox.gallery[gallery][currentItem-1].path);
+                            var currentSlide = $isLightBox.gallery[gallery][currentItem-1];
+
+                            $isLightBox.gotoToElement(currentSlide.path, currentSlide.title, options);
                             currentItem--;
                             $isLightBox.refreshArrows(currentItem, gallery, options);
                         }
                     });
                 }
 
-                $islb.html([$islbClose, $islbNext, $islbPrev]).append($isLightBox.getContainer(elementPath));
+                $islb.html([$islbClose, $islbNext, $islbPrev]).append($isLightBox.getContainer(elementPath, elementTitle));
 
                 $('body').append($islb);
+
+                $isLightBox.addMediaCaption(elementTitle, options);
 
                 $isLightBox.refreshArrows(currentItem, gallery, options);
 
@@ -186,24 +205,41 @@
                     });
                 }
             },
-            getContainer: function(elementPath) {
+            addMediaCaption: function(elementTitle, options) {
+                if ($('.islb').find('.islb-media-caption').length > 0) {
+                    $('.islb').find('.islb-media-caption').animate({'opacity': 0}, options.changeSpeed, function() {
+                        $(this).remove();
+
+                        if (elementTitle !== '' && elementTitle !== undefined) {
+                            $('.islb').append($('<div>', {'class': 'islb-media-caption'}).css({'opacity': 0}).text(elementTitle).animate({'opacity': 1}, options.changeSpeed));
+                        }
+                    });
+                } else {
+                    if (elementTitle !== '' && elementTitle !== undefined) {
+                        $('.islb').append($('<div>', {'class': 'islb-media-caption'}).text(elementTitle));
+                    }
+                }
+            },
+            getContainer: function(elementPath, elementTitle, options) {
                 var $islbContainer = $('<div>', {'class': 'islb-container'}),
                     $islbMediaContainer = $('<div>', {'class': 'islb-media-container'}),
                     $islbMedia = $('<div>', {'class': 'islb-media'});
 
+                this.addMediaCaption(elementTitle, options);
+
                 return $islbContainer.html($islbMediaContainer.html($islbMedia.html(this.getElement.init(elementPath))));
             },
-            gotoToElement: function(elementPath) {
-                var $container = this.getContainer(elementPath);
+            gotoToElement: function(elementPath, elementTitle, options) {
+                var $container = this.getContainer(elementPath, elementTitle, options);
 
                 $container.css({'opacity': 0});
 
-                $('.islb .islb-container').animate({'opacity': 0}, 'slow', function() {
+                $('.islb .islb-container').animate({'opacity': 0}, options.changeSpeed, function() {
                     $('.islb .islb-container').remove();
 
                     $('.islb').append($container);
 
-                    $container.animate({'opacity': 1}, 'slow');
+                    $container.animate({'opacity': 1}, options.changeSpeed);
                 });
             },
             destroyIsLightBox: function(options, $obj) {
