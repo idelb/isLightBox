@@ -258,11 +258,43 @@
                 }, options.revealSpeed + 100);
             },
             getElement: {
+                imagesExtension: ['jpg', 'jpeg', 'png', 'gif', 'tif', 'bmp', 'svg'],
                 init: function(elementPath) {
-                    return this.getImage(elementPath);
+                    var ext = elementPath.substr((elementPath.lastIndexOf('.') +1)),
+                        videoURL = elementPath.match(/(youtube|youtu|vimeo|dailymotion|kickstarter)\.(com|be)\/((watch\?v=([-\w]+))|(video\/([-\w]+))|(projects\/([-\w]+)\/([-\w]+))|([-\w]+))/);
+
+                    if ($.inArray(ext, this.imagesExtension) > -1) {
+                        return this.getImage(elementPath);
+                    } else if (videoURL !== null) {
+                        return this.getVideo(elementPath, videoURL);
+                    } else {
+                        return this.getExternalLink(elementPath);
+                    }
                 },
                 getImage: function(elementPath) {
                     return $('<img>', {'src': elementPath});
+                },
+                getExternalLink: function(elementPath) {
+                    return $('<iframe>', {'src': elementPath});
+                },
+                getVideo: function(elementPath, videoURL) {
+                    switch (videoURL[1]) {
+                        case 'youtube':
+                        case 'youtu':
+                            elementPath = 'http://www.youtube.com/embed/' + videoURL[5];
+                            break;
+                        case 'vimeo':
+                            elementPath = 'http://player.vimeo.com/video/' + videoURL[3];
+                            break;
+                        case 'dailymotion':
+                            elementPath = 'https://www.dailymotion.com/embed/video/' + videoURL[7];
+                            break;
+                        case 'kickstarter':
+                            elementPath = 'https://www.kickstarter.com/projects/' + videoURL[9] + '/' + videoURL[10] + '/widget/video.html';
+                            break;
+                    }
+
+                    return this.getExternalLink(elementPath);
                 }
             }
         }

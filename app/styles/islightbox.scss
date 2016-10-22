@@ -58,6 +58,12 @@
                     max-height: 99%;
                     box-shadow: 0 0 50px -8px rgba(0, 0, 0, 0.9);
                 }
+                iframe {
+                    border: 0;
+                    width: 100%;
+                    height: 90%;
+                    background-color: #fff;
+                }
                 &:before {
                     content: '';
                     display: inline-block;
