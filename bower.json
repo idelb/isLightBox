@@ -5,6 +5,26 @@
     "jquery": "^3.1.*",
     "normalize-css": "^5.0.0"
   },
+  "main": [
+    "dist/scripts/islightbox.min.js",
+    "dist/styles/islightbox.min.css"
+  ],
+  "homepage": "https://github.com/idelb/isLightBox",
+  "authors": [
+    "Bledar Muca <idelb82@gmail.com>"
+  ],
+  "description": "Fluid, responsive and easy lightbox",
+  "license": "MIT",
+  "ignore": [
+    "*",
+    "!dist/scripts/islightbox.min.js",
+    "!dist/styles/islightbox.min.css"
+  ],
+  "keywords": [
+    "responsive",
+    "lightbox",
+    "jquery"
+  ],
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.1.2"
